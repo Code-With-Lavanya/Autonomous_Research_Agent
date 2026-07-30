@@ -1,0 +1,397 @@
+@import "tailwindcss";
+
+/* Self-hosted type system — the sandbox this was built in can't reach
+   Google Fonts at build time, and self-hosting via @fontsource avoids a
+   runtime dependency on Google's font CDN anyway, which is a reasonable
+   choice on its own merits. */
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-sans/700.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+/* Manual dark-mode toggle (class-based) instead of relying solely on
+   prefers-color-scheme, so the header toggle can override the OS setting. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --paper: #fafbfd;
+  --surface: #ffffff;
+  --surface-2: #f3f5f8;
+  --ink: #12151c;
+  --ink-soft: #545b6c;
+  --ink-faint: #8b91a1;
+  --line: #e3e6ed;
+  --line-soft: #edeff4;
+
+  --brand: #2f5cff;
+  --brand-hover: #2547d6;
+  --brand-ink: #ffffff;
+  --brand-soft: #edf1ff;
+  --brand-soft-ink: #2547d6;
+
+  --good: #157a56;
+  --good-soft: #e3f5ec;
+  --warn: #a15d0a;
+  --warn-soft: #fcefdd;
+  --bad: #c23b3b;
+  --bad-soft: #fbeaea;
+
+  --shadow-color: 18 21 28;
+}
+
+.dark {
+  --paper: #0a0c11;
+  --surface: #12151c;
+  --surface-2: #1a1e28;
+  --ink: #f4f5f8;
+  --ink-soft: #a7adbc;
+  --ink-faint: #666d80;
+  --line: #262b37;
+  --line-soft: #1c202a;
+
+  --brand: #7c97ff;
+  --brand-hover: #97aeff;
+  --brand-ink: #0a0c11;
+  --brand-soft: #1b2247;
+  --brand-soft-ink: #c1cdff;
+
+  --good: #49cc97;
+  --good-soft: #113523;
+  --warn: #e3a24a;
+  --warn-soft: #3a2810;
+  --bad: #f1837d;
+  --bad-soft: #3a1717;
+
+  --shadow-color: 0 0 0;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-soft-ink: var(--brand-soft-ink);
+
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius-sm: 0.625rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.375rem;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 2px rgb(var(--shadow-color) / 0.05), 0 10px 24px -14px rgb(var(--shadow-color) / 0.22);
+  --shadow-raised: 0 2px 6px rgb(var(--shadow-color) / 0.06), 0 24px 48px -20px rgb(var(--shadow-color) / 0.28);
+  --shadow-ask: 0 1px 2px rgb(var(--shadow-color) / 0.05), 0 16px 40px -12px rgb(47 92 255 / 0.22);
+
+  --ease-signal: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-node-pulse: node-pulse 2.6s var(--ease-signal) infinite;
+  --animate-fade-up: fade-up 0.6s var(--ease-out-soft) both;
+  --animate-shimmer: shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes node-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.14);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-feature-settings: "cv05", "cv11";
+  }
+
+  ::selection {
+    background: var(--color-brand);
+    color: var(--color-brand-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--color-surface-2) 25%,
+      var(--color-line-soft) 37%,
+      var(--color-surface-2) 63%
+    );
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Report typography — the writer agent returns markdown-ish long-form    */
+/* text, rendered via react-markdown. Hand-rolled instead of the          */
+/* typography plugin so it tracks the rest of the type system exactly.   */
+/* ---------------------------------------------------------------------- */
+.report-prose {
+  color: var(--color-ink);
+  font-size: 0.975rem;
+  line-height: 1.75;
+}
+
+.report-prose > :first-child {
+  margin-top: 0;
+}
+
+.report-prose h1 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.9rem;
+  color: var(--color-ink);
+}
+
+.report-prose h2 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.35;
+  letter-spacing: -0.006em;
+  margin: 1.9rem 0 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.report-prose h2:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0.5rem;
+}
+
+.report-prose h3 {
+  font-weight: 600;
+  font-size: 1.02rem;
+  margin: 1.4rem 0 0.5rem;
+}
+
+.report-prose h4 {
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+  margin: 1.2rem 0 0.5rem;
+}
+
+.report-prose p {
+  margin: 0 0 1rem;
+  color: var(--color-ink);
+}
+
+.report-prose strong {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.report-prose em {
+  font-style: italic;
+}
+
+.report-prose ul,
+.report-prose ol {
+  margin: 0 0 1.1rem;
+  padding-left: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.report-prose ul {
+  list-style: none;
+  padding-left: 0.2rem;
+}
+
+.report-prose ul > li {
+  position: relative;
+  padding-left: 1.15rem;
+}
+
+.report-prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  top: 0.65em;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--color-brand);
+}
+
+.report-prose ol {
+  list-style: none;
+  counter-reset: report-ol;
+  padding-left: 0.2rem;
+}
+
+.report-prose ol > li {
+  counter-increment: report-ol;
+  position: relative;
+  padding-left: 1.6rem;
+}
+
+.report-prose ol > li::before {
+  content: counter(report-ol);
+  position: absolute;
+  left: 0;
+  top: 0.02em;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-brand);
+}
+
+.report-prose li > ul,
+.report-prose li > ol {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+.report-prose blockquote {
+  margin: 1rem 0;
+  padding: 0.15rem 0 0.15rem 1rem;
+  border-left: 2px solid var(--color-brand);
+  color: var(--color-ink-soft);
+  font-style: italic;
+}
+
+.report-prose hr {
+  border: none;
+  border-top: 1px solid var(--color-line);
+  margin: 1.75rem 0;
+}
+
+.report-prose a {
+  color: var(--color-brand);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.report-prose a:hover {
+  color: var(--color-brand-hover);
+}
+
+.report-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--color-surface-2);
+  padding: 0.15em 0.4em;
+  border-radius: 5px;
+}
+
+.report-prose pre {
+  margin: 1rem 0;
+  padding: 0.9rem 1rem;
+  background: var(--color-surface-2);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+}
+
+.report-prose pre code {
+  background: none;
+  padding: 0;
+}
+
+.report-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.1rem 0;
+  font-size: 0.9rem;
+}
+
+.report-prose th,
+.report-prose td {
+  border: 1px solid var(--color-line);
+  padding: 0.5rem 0.65rem;
+  text-align: left;
+}
+
+.report-prose th {
+  background: var(--color-surface-2);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+}

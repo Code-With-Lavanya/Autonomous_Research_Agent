@@ -1,0 +1,7 @@
+from langchain_mistralai import ChatMistralAI
+import os
+from dotenv import load_dotenv
+load_dotenv()
+llm_mistral = ChatMistralAI(
+    model="mistral-small-latest",
+    api_key=os.getenv("MISTRAL_API_KEY"))

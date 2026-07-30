@@ -1,0 +1,23 @@
+# Python
+myenv/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Chroma
+vector_db/
+
+# Environment
+.env
+
+# Uploads
+uploads/
+
+# Next.js
+node_modules/
+.next/
+
+# OS
+.DS_Store
+Thumbs.db
