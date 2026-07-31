@@ -44,7 +44,6 @@ def index_document(file_path):
     return vectorstore
 
 def get_relevant_documents(query):
-def get_relevant_documents(query):
     vectorstore = get_vectorstore()
 
     retriever = vectorstore.as_retriever(
