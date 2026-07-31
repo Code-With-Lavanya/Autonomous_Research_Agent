@@ -99,14 +99,14 @@ Final Research Report
 
 # 📸 Screenshots
 
-(Add screenshots here)
+(On LinkedIn)
 
 ---
 
 # ⚙ Installation
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Code-With-Lavanya/Autonomous_Research_Agent
 ```
 
 Backend
