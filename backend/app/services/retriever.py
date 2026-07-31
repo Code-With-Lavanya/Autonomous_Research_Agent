@@ -4,13 +4,27 @@ from app.services.document_loader import load_document
 from langchain_huggingface import HuggingFaceEmbeddings
 from app.state import ResearchState
 
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-vectorstore = Chroma(
-    persist_directory="vector_db",
-    embedding_function=embeddings
-)
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
+
+embeddings = None
+vectorstore = None
 
 
+def get_vectorstore():
+    global embeddings, vectorstore
+
+    if vectorstore is None:
+        embeddings = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2"
+        )
+
+        vectorstore = Chroma(
+            persist_directory="vector_db",
+            embedding_function=embeddings
+        )
+
+    return vectorstore
 def prepare_documents(file_path):
     documents = load_document(file_path)
 
@@ -30,6 +44,9 @@ def index_document(file_path):
     return vectorstore
 
 def get_relevant_documents(query):
+def get_relevant_documents(query):
+    vectorstore = get_vectorstore()
+
     retriever = vectorstore.as_retriever(
         search_type="mmr",
         search_kwargs={
@@ -37,6 +54,7 @@ def get_relevant_documents(query):
             "fetch_k": 20
         }
     )
+
     return retriever.invoke(query)
 
 
